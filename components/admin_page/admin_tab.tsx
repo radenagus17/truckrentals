@@ -11,6 +11,7 @@ import Navigation from "../layout/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import OrdersItem from "./orders_tab/ordersItem";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -70,15 +71,19 @@ export default function AdminTab() {
         <Box sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange}>
-              <Tab label="Print Invoice" {...a11yProps(0)} />
+              <Tab label="Form Invoice" {...a11yProps(0)} />
               <Tab label="Tambah Jasa Sewa" {...a11yProps(1)} />
+              <Tab label="Daftar Order" {...a11yProps(2)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <InvoiceForm />
+            <InvoiceForm toTab={setValue} tab={value} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <AddService />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <OrdersItem />
           </TabPanel>
         </Box>
       </div>

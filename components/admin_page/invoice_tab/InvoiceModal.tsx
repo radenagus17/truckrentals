@@ -5,6 +5,21 @@ import { Dialog, Transition } from "@headlessui/react";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
 import { Button } from "@mui/material";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+import { db, storage } from "@/firebase_config";
+
+const date = new Date();
+const today = date.toLocaleDateString("en-GB", {
+  month: "numeric",
+  day: "numeric",
+  year: "numeric",
+});
 
 const InvoiceModal = ({
   isOpen,
@@ -12,6 +27,7 @@ const InvoiceModal = ({
   invoiceInfo,
   items,
   onAddNextInvoice,
+  toTab,
 }: any) => {
   function closeModal() {
     setIsOpen(false);
@@ -22,66 +38,80 @@ const InvoiceModal = ({
     onAddNextInvoice();
   };
 
-  const SaveAsPDFHandler = () => {
-    const dom = document.getElementById("print") as any;
-    toPng(dom)
-      .then((dataUrl) => {
-        const img = new Image();
-        img.crossOrigin = "annoymous";
-        img.src = dataUrl;
-        img.onload = () => {
-          // Initialize the PDF.
-          const pdf = new jsPDF({
-            orientation: "portrait",
-            unit: "in",
-            format: [5.5, 8.5],
-          });
+  const SaveAsPDFHandler = async () => {
+    await addDoc(collection(db, "orders"), {
+      telah_terima_dari: invoiceInfo.telahTerimaDari,
+      invoiceDate: today,
+      totalPrice: invoiceInfo.total,
+      telah_dibayar: invoiceInfo.uangSejumlah,
+      invoiceNumber: invoiceInfo.invoiceNumber,
+      jenis_truk: items[0].jenisTruk,
+      kota: items[0].kota,
+      kg: items[0].kg,
+      status: "PENDING",
+      platKendaraan: "",
+      supir: "",
+    });
+    toTab(2);
+    // const dom = document.getElementById("print") as any;
+    // toPng(dom)
+    //   .then((dataUrl) => {
+    //     const img = new Image();
+    //     img.crossOrigin = "annoymous";
+    //     img.src = dataUrl;
+    //     img.onload = () => {
+    //       // Initialize the PDF.
+    //       const pdf = new jsPDF({
+    //         orientation: "portrait",
+    //         unit: "in",
+    //         format: [5.5, 8.5],
+    //       });
 
-          // Define reused data
-          const imgProps = pdf.getImageProperties(img);
-          const imageType = imgProps.fileType;
-          const pdfWidth = pdf.internal.pageSize.getWidth();
+    //       // Define reused data
+    //       const imgProps = pdf.getImageProperties(img);
+    //       const imageType = imgProps.fileType;
+    //       const pdfWidth = pdf.internal.pageSize.getWidth();
 
-          // Calculate the number of pages.
-          const pxFullHeight = imgProps.height;
-          const pxPageHeight = Math.floor((imgProps.width * 8.5) / 5.5);
-          const nPages = Math.ceil(pxFullHeight / pxPageHeight);
+    //       // Calculate the number of pages.
+    //       const pxFullHeight = imgProps.height;
+    //       const pxPageHeight = Math.floor((imgProps.width * 8.5) / 5.5);
+    //       const nPages = Math.ceil(pxFullHeight / pxPageHeight);
 
-          // Define pageHeight separately so it can be trimmed on the final page.
-          let pageHeight = pdf.internal.pageSize.getHeight();
+    //       // Define pageHeight separately so it can be trimmed on the final page.
+    //       let pageHeight = pdf.internal.pageSize.getHeight();
 
-          // Create a one-page canvas to split up the full image.
-          const pageCanvas = document.createElement("canvas");
-          const pageCtx = pageCanvas.getContext("2d") as any;
-          pageCanvas.width = imgProps.width;
-          pageCanvas.height = pxPageHeight;
+    //       // Create a one-page canvas to split up the full image.
+    //       const pageCanvas = document.createElement("canvas");
+    //       const pageCtx = pageCanvas.getContext("2d") as any;
+    //       pageCanvas.width = imgProps.width;
+    //       pageCanvas.height = pxPageHeight;
 
-          for (let page = 0; page < nPages; page++) {
-            // Trim the final page to reduce file size.
-            if (page === nPages - 1 && pxFullHeight % pxPageHeight !== 0) {
-              pageCanvas.height = pxFullHeight % pxPageHeight;
-              pageHeight = (pageCanvas.height * pdfWidth) / pageCanvas.width;
-            }
-            // Display the page.
-            const w = pageCanvas.width;
-            const h = pageCanvas.height;
-            pageCtx.fillStyle = "white";
-            pageCtx.fillRect(0, 0, w, h);
-            pageCtx.drawImage(img, 0, page * pxPageHeight, w, h, 0, 0, w, h);
+    //       for (let page = 0; page < nPages; page++) {
+    //         // Trim the final page to reduce file size.
+    //         if (page === nPages - 1 && pxFullHeight % pxPageHeight !== 0) {
+    //           pageCanvas.height = pxFullHeight % pxPageHeight;
+    //           pageHeight = (pageCanvas.height * pdfWidth) / pageCanvas.width;
+    //         }
+    //         // Display the page.
+    //         const w = pageCanvas.width;
+    //         const h = pageCanvas.height;
+    //         pageCtx.fillStyle = "white";
+    //         pageCtx.fillRect(0, 0, w, h);
+    //         pageCtx.drawImage(img, 0, page * pxPageHeight, w, h, 0, 0, w, h);
 
-            // Add the page to the PDF.
-            if (page) pdf.addPage();
+    //         // Add the page to the PDF.
+    //         if (page) pdf.addPage();
 
-            const imgData = pageCanvas.toDataURL(`image/Rp{imageType}`, 1);
-            pdf.addImage(imgData, imageType, 0, 0, pdfWidth, pageHeight);
-          }
-          // Output / Save
-          pdf.save(`invoice-Rp{invoiceInfo.invoiceNumber}.pdf`);
-        };
-      })
-      .catch((error) => {
-        console.error("oops, something went wrong!", error);
-      });
+    //         const imgData = pageCanvas.toDataURL(`image/Rp{imageType}`, 1);
+    //         pdf.addImage(imgData, imageType, 0, 0, pdfWidth, pageHeight);
+    //       }
+    //       // Output / Save
+    //       pdf.save(`invoice-${invoiceInfo.invoiceNumber}.pdf`);
+    //     };
+    //   })
+    //   .catch((error) => {
+    //     console.error("oops, something went wrong!", error);
+    //   });
   };
 
   const totalBerat = items.reduce((total: number, item: any) => {
@@ -242,7 +272,7 @@ const InvoiceModal = ({
                   variant="contained"
                   onClick={SaveAsPDFHandler}
                 >
-                  CETAK PDF
+                  Simpan Item
                 </Button>
                 <Button
                   fullWidth={true}

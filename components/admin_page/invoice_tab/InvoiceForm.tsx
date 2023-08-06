@@ -4,7 +4,15 @@ import { useState } from "react";
 import { uid } from "uid";
 import InvoiceItem from "./InvoiceItem";
 import InvoiceModal from "./InvoiceModal";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, CircularProgress } from "@mui/material";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+import { db, storage } from "@/firebase_config";
 
 const date = new Date();
 const today = date.toLocaleDateString("en-GB", {
@@ -13,11 +21,13 @@ const today = date.toLocaleDateString("en-GB", {
   year: "numeric",
 });
 
-const InvoiceForm = () => {
+const InvoiceForm = ({ toTab }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [invoiceNumber, setInvoiceNumber] = useState(1);
   const [telahTerimaDari, setTelahTerimaDari] = useState("");
   const [uangSejumlah, setUangSejumlah] = useState("");
+  const [lastItem, setLastItem] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([
     {
       id: uid(6),
@@ -33,9 +43,43 @@ const InvoiceForm = () => {
     },
   ]);
 
-  const reviewInvoiceHandler = (event: any) => {
+  const createInvoiceHandler = async (event: any) => {
     event.preventDefault();
-    setIsOpen(true);
+    // console.log(loading);
+    setLoading(true);
+    setTimeout(async () => {
+      // event.preventDefault();
+      if (items.length < 2 || lastItem) {
+        await addDoc(collection(db, "orders"), {
+          telah_terima_dari: telahTerimaDari,
+          invoiceDate: today,
+          totalPrice: total,
+          telah_dibayar: uangSejumlah,
+          invoiceNumber: invoiceNumber,
+          jenis_truk: items[items.length - 1].jenisTruk,
+          kota: items[items.length - 1].kota,
+          kg: items[items.length - 1].kg,
+          status: "PENDING",
+          platKendaraan: "",
+          supir: "",
+        });
+        await addDoc(collection(db, "invoices"), {
+          invoiceNumber: invoiceNumber,
+          uraian: items[items.length - 1].uraian,
+          jenisTruk: items[items.length - 1].jenisTruk,
+          kota: items[items.length - 1].kota,
+          kg: items[items.length - 1].kg,
+          jarakKota: items[items.length - 1].jarakKota,
+          qtyBags: items[items.length - 1].qtyBags,
+          harga: items[items.length - 1].harga,
+          keterangan: items[items.length - 1].keterangan,
+        });
+      } else {
+        toTab(2);
+      }
+      setLoading(false);
+      toTab(2);
+    }, 3000);
   };
 
   const addNextInvoiceHandler = () => {
@@ -56,8 +100,20 @@ const InvoiceForm = () => {
     ]);
   };
 
-  const addItemHandler = () => {
-    const id = uid(6);
+  const addItemHandler = async () => {
+    // const id = uid(6);
+    setLastItem(true);
+    await addDoc(collection(db, "invoices"), {
+      invoiceNumber: invoiceNumber,
+      uraian: items[items.length - 1].uraian,
+      jenisTruk: items[items.length - 1].jenisTruk,
+      kota: items[items.length - 1].kota,
+      kg: items[items.length - 1].kg,
+      jarakKota: items[items.length - 1].jarakKota,
+      qtyBags: items[items.length - 1].qtyBags,
+      harga: items[items.length - 1].harga,
+      keterangan: items[items.length - 1].keterangan,
+    });
     setItems((prevItem) => [
       ...prevItem,
       {
@@ -130,7 +186,7 @@ const InvoiceForm = () => {
 
   return (
     <div>
-      <form onSubmit={reviewInvoiceHandler}>
+      <form onSubmit={createInvoiceHandler}>
         <div className="my-6 rounded-md bg-white p-4 border space-y-8 md:p-6">
           <div className="flex flex-col justify-between border-b border-gray-900/10 pb-4 md:flex-row md:items-center">
             <div className="flex space-x-2">
@@ -250,12 +306,13 @@ const InvoiceForm = () => {
             className="bg-primary"
             sx={{ color: "white" }}
           >
-            Review Invoice
+            {loading ? `loading...` : `Buat Invoice`}
           </Button>
         </div>
 
         <div>
           <InvoiceModal
+            toTab={toTab}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             invoiceInfo={{
