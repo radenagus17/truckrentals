@@ -61,31 +61,34 @@ function Navigation({ handleOpen }: any) {
               </Button>
             );
           })}
-          {activeUser ? (
-            <div className="flex items-center space-x-5">
-              <Link href="/admin">
-                <Button sx={{ color: "black" }}>Admin</Button>
-              </Link>
-              <IconButton
-                onClick={() => {
-                  auth.signOut();
-                  setActiveUser(false);
-                  toast("Log Out Berhasil");
-                }}
-              >
-                <LogoutIcon />
-              </IconButton>
-            </div>
-          ) : (
-            <Button
-              variant="contained"
-              className="bg-primary"
-              onClick={handleOpen}
-              sx={{ color: "white" }}
-            >
-              Login
-            </Button>
-          )}
+          {
+            activeUser ? (
+              <div className="flex items-center space-x-5">
+                <Link href="/admin">
+                  <Button sx={{ color: "black" }}>Admin</Button>
+                </Link>
+                <IconButton
+                  onClick={() => {
+                    auth.signOut();
+                    setActiveUser(false);
+                    toast("Log Out Berhasil");
+                  }}
+                >
+                  <LogoutIcon />
+                </IconButton>
+              </div>
+            ) : undefined
+            // (
+            //   <Button
+            //     variant="contained"
+            //     className="bg-primary"
+            //     onClick={handleOpen}
+            //     sx={{ color: "white" }}
+            //   >
+            //     Login
+            //   </Button>
+            // )
+          }
         </div>
 
         {/* Menu Button  */}
@@ -114,31 +117,34 @@ function Navigation({ handleOpen }: any) {
               </Button>
             );
           })}
-          {activeUser ? (
-            <div className="flex items-center space-x-5">
-              <Link href="/admin">
-                <Button sx={{ color: "black" }}>Admin</Button>
-              </Link>
-              <IconButton
-                onClick={() => {
-                  auth.signOut();
-                  setActiveUser(false);
-                  toast("Log Out Berhasil");
-                }}
-              >
-                <LogoutIcon />
-              </IconButton>
-            </div>
-          ) : (
-            <Button
-              variant="contained"
-              className="bg-primary"
-              onClick={handleOpen}
-              sx={{ color: "white" }}
-            >
-              Login
-            </Button>
-          )}
+          {
+            activeUser ? (
+              <div className="flex items-center space-x-5">
+                <Link href="/admin">
+                  <Button sx={{ color: "black" }}>Admin</Button>
+                </Link>
+                <IconButton
+                  onClick={() => {
+                    auth.signOut();
+                    setActiveUser(false);
+                    toast("Log Out Berhasil");
+                  }}
+                >
+                  <LogoutIcon />
+                </IconButton>
+              </div>
+            ) : undefined
+            // (
+            //   <Button
+            //     variant="contained"
+            //     className="bg-primary"
+            //     onClick={handleOpen}
+            //     sx={{ color: "white" }}
+            //   >
+            //     Login
+            //   </Button>
+            // )
+          }
         </div>
 
         {/* Menu Button  */}
@@ -171,33 +177,36 @@ function Navigation({ handleOpen }: any) {
               </div>
             );
           })}
-          {activeUser ? (
-            <>
-              <Link href="/admin">
-                <Button sx={{ color: "black" }}>Admin</Button>
-              </Link>
-              <Button
-                onClick={() => {
-                  auth.signOut();
-                  setActiveUser(false);
-                  toast("Log Out Berhasil");
-                }}
-                variant="contained"
-                className="bg-primary"
-              >
-                Log Out
-              </Button>
-            </>
-          ) : (
-            <Button
-              variant="contained"
-              className="bg-primary"
-              onClick={handleOpen}
-              sx={{ color: "white" }}
-            >
-              Login
-            </Button>
-          )}
+          {
+            activeUser ? (
+              <>
+                <Link href="/admin">
+                  <Button sx={{ color: "black" }}>Admin</Button>
+                </Link>
+                <Button
+                  onClick={() => {
+                    auth.signOut();
+                    setActiveUser(false);
+                    toast("Log Out Berhasil");
+                  }}
+                  variant="contained"
+                  className="bg-primary"
+                >
+                  Log Out
+                </Button>
+              </>
+            ) : undefined
+            // (
+            //   <Button
+            //     variant="contained"
+            //     className="bg-primary"
+            //     onClick={handleOpen}
+            //     sx={{ color: "white" }}
+            //   >
+            //     Login
+            //   </Button>
+            // )
+          }
         </div>
       </div>
       {/* Mobile Nav End  */}

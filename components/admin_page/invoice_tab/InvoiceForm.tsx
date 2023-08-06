@@ -45,7 +45,6 @@ const InvoiceForm = ({ toTab }: any) => {
 
   const createInvoiceHandler = async (event: any) => {
     event.preventDefault();
-    // console.log(loading);
     setLoading(true);
     setTimeout(async () => {
       // event.preventDefault();
@@ -58,7 +57,7 @@ const InvoiceForm = ({ toTab }: any) => {
           invoiceNumber: invoiceNumber,
           jenis_truk: items[items.length - 1].jenisTruk,
           kota: items[items.length - 1].kota,
-          kg: items[items.length - 1].kg,
+          totalBerat: totalBerat,
           status: "PENDING",
           platKendaraan: "",
           supir: "",
@@ -182,6 +181,9 @@ const InvoiceForm = ({ toTab }: any) => {
 
   const total = items.reduce((total, num) => {
     return total + Number(num.harga);
+  }, 0);
+  const totalBerat = items.reduce((total, num) => {
+    return total + Number(num.kg);
   }, 0);
 
   return (

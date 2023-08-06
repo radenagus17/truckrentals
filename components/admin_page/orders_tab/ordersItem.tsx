@@ -29,12 +29,6 @@ export default function OrdersItem() {
     });
   };
 
-  // useEffect(() => {
-  //   onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
-  //     setMovies(doc.data()?.savedShows);
-  //   });
-  // }, [user?.email]);
-
   useEffect(() => {
     getData();
   }, []);
@@ -47,7 +41,6 @@ export default function OrdersItem() {
 
   // update status in firebase
   const updateStatus = async (item) => {
-    // console.log(item);
     setInvoice(item.id);
     setLoading(true);
     setTimeout(async () => {
@@ -91,7 +84,7 @@ export default function OrdersItem() {
             <th>Tanggal Invoice</th>
             <th>Invoice Number</th>
             <th>Kota</th>
-            <th>Kg</th>
+            <th>Total Berat</th>
             <th>Total Harga</th>
             <th>Terima Dari</th>
             <th>
@@ -114,7 +107,7 @@ export default function OrdersItem() {
                 <td>{item.invoiceDate}</td>
                 <td>{item.invoiceNumber}</td>
                 <td>{item.kota}</td>
-                <td>{item.kg}</td>
+                <td>{item.totalBerat}</td>
                 <td>
                   <div>
                     Rp.{" "}

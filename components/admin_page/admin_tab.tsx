@@ -72,17 +72,17 @@ export default function AdminTab() {
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange}>
               <Tab label="Form Invoice" {...a11yProps(0)} />
-              <Tab label="Tambah Jasa Sewa" {...a11yProps(1)} />
-              <Tab label="Daftar Order" {...a11yProps(2)} />
+              {/* <Tab label="Tambah Jasa Sewa" {...a11yProps(1)} /> */}
+              <Tab label="Daftar Order" {...a11yProps(1)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
             <InvoiceForm toTab={setValue} tab={value} />
           </TabPanel>
-          <TabPanel value={value} index={1}>
+          {/* <TabPanel value={value} index={1}>
             <AddService />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
+          </TabPanel> */}
+          <TabPanel value={value} index={1}>
             <OrdersItem />
           </TabPanel>
         </Box>
