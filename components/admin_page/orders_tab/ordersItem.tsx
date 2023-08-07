@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Button, IconButton, CircularProgress } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
+  query,
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
@@ -49,6 +51,16 @@ export default function OrdersItem() {
         supir: item.supir,
         platKendaraan: item.platKendaraan,
       });
+      setLoading(false);
+    }, 2000);
+  };
+
+  // delete order in firebase
+  const deleteItem = (item) => {
+    setLoading(true);
+    setTimeout(async () => {
+      await deleteDoc(doc(db, "orders", item.id));
+      await deleteDoc(doc(db, "invoices", item.uidInv));
       setLoading(false);
     }, 2000);
   };
@@ -175,6 +187,9 @@ export default function OrdersItem() {
                     </IconButton>
                     <IconButton onClick={(e) => openModalPrint(e, item)}>
                       <PrintIcon />
+                    </IconButton>
+                    <IconButton onClick={() => deleteItem(item)}>
+                      <DeleteIcon />
                     </IconButton>
                   </div>
                 </td>

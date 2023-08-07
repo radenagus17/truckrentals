@@ -25,6 +25,7 @@ const InvoiceForm = ({ toTab }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [invoiceNumber, setInvoiceNumber] = useState(1);
   const [telahTerimaDari, setTelahTerimaDari] = useState("");
+  const [order, setOrder] = useState("");
   const [uangSejumlah, setUangSejumlah] = useState("");
   const [lastItem, setLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -49,8 +50,21 @@ const InvoiceForm = ({ toTab }: any) => {
     setTimeout(async () => {
       // event.preventDefault();
       if (items.length < 2 || lastItem) {
+        const inv = await addDoc(collection(db, "invoices"), {
+          // idOrder: dataOrder.id,
+          invoiceNumber: invoiceNumber,
+          uraian: items[items.length - 1].uraian,
+          jenisTruk: items[items.length - 1].jenisTruk,
+          kota: items[items.length - 1].kota,
+          kg: items[items.length - 1].kg,
+          jarakKota: items[items.length - 1].jarakKota,
+          qtyBags: items[items.length - 1].qtyBags,
+          harga: items[items.length - 1].harga,
+          keterangan: items[items.length - 1].keterangan,
+        });
         await addDoc(collection(db, "orders"), {
           telah_terima_dari: telahTerimaDari,
+          uidInv: order ? order : inv.id,
           invoiceDate: today,
           totalPrice: total,
           telah_dibayar: uangSejumlah,
@@ -62,22 +76,12 @@ const InvoiceForm = ({ toTab }: any) => {
           platKendaraan: "",
           supir: "",
         });
-        await addDoc(collection(db, "invoices"), {
-          invoiceNumber: invoiceNumber,
-          uraian: items[items.length - 1].uraian,
-          jenisTruk: items[items.length - 1].jenisTruk,
-          kota: items[items.length - 1].kota,
-          kg: items[items.length - 1].kg,
-          jarakKota: items[items.length - 1].jarakKota,
-          qtyBags: items[items.length - 1].qtyBags,
-          harga: items[items.length - 1].harga,
-          keterangan: items[items.length - 1].keterangan,
-        });
+        // setOrder(dataOrder.id);
       } else {
-        toTab(2);
+        toTab(1);
       }
       setLoading(false);
-      toTab(2);
+      toTab(1);
     }, 3000);
   };
 
@@ -102,7 +106,7 @@ const InvoiceForm = ({ toTab }: any) => {
   const addItemHandler = async () => {
     // const id = uid(6);
     setLastItem(true);
-    await addDoc(collection(db, "invoices"), {
+    const inv = await addDoc(collection(db, "invoices"), {
       invoiceNumber: invoiceNumber,
       uraian: items[items.length - 1].uraian,
       jenisTruk: items[items.length - 1].jenisTruk,
@@ -113,6 +117,7 @@ const InvoiceForm = ({ toTab }: any) => {
       harga: items[items.length - 1].harga,
       keterangan: items[items.length - 1].keterangan,
     });
+    setOrder(inv.id);
     setItems((prevItem) => [
       ...prevItem,
       {
