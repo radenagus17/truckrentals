@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, IconButton, CircularProgress } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  CircularProgress,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -169,15 +177,17 @@ export default function OrdersItem() {
                       <CircularProgress />
                     </div>
                   ) : (
-                    <InvoiceField
-                      onEditItem={(event: any) => edtiItemHandler(event)}
-                      cellData={{
-                        type: "text",
-                        name: "status",
-                        id: item.id,
-                        value: item.status,
-                      }}
-                    />
+                    <select
+                      className="appearance-none focus:outline-none"
+                      name="status"
+                      id={item.id}
+                      value={item.status}
+                      onChange={(e: any) => edtiItemHandler(e)}
+                    >
+                      <option value="PENDING">PENDING</option>
+                      <option value="DALAM PROSES">DALAM PROSES</option>
+                      <option value="SELESAI">SELESAI</option>
+                    </select>
                   )}
                 </td>
                 <td>
