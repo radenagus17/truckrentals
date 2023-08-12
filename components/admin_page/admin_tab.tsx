@@ -12,6 +12,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import OrdersItem from "./orders_tab/ordersItem";
+import PriceItems from "./price_tab/price_items";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -74,6 +75,7 @@ export default function AdminTab() {
               <Tab label="Form Invoice" {...a11yProps(0)} />
               {/* <Tab label="Tambah Jasa Sewa" {...a11yProps(1)} /> */}
               <Tab label="Daftar Order" {...a11yProps(1)} />
+              <Tab label="Daftar Harga" {...a11yProps(2)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
@@ -84,6 +86,9 @@ export default function AdminTab() {
           </TabPanel> */}
           <TabPanel value={value} index={1}>
             <OrdersItem />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <PriceItems />
           </TabPanel>
         </Box>
       </div>

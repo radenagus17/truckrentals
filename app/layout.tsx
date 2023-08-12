@@ -6,6 +6,7 @@ import {
   createTheme,
 } from "@mui/material";
 import "./globals.css";
+import PriceProvider from "@/context/PriceContext";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,16 +33,19 @@ export default function RootLayout({ children }: layout) {
         <title>Truck Rental</title>
       </head>
       <body>
-        <ThemeProvider theme={theme}>
-          <StyledEngineProvider injectFirst={true}>
-            <ToastContainer
-              progressStyle={{ background: "#253993" }}
-              autoClose={1000}
-              position="bottom-right"
-            />
-            {children}
-          </StyledEngineProvider>
-        </ThemeProvider>
+        <PriceProvider>
+          <ThemeProvider theme={theme}>
+            <StyledEngineProvider injectFirst={true}>
+              <ToastContainer
+                progressStyle={{ background: "#253993" }}
+                autoClose={1000}
+                position="bottom-right"
+              />
+
+              {children}
+            </StyledEngineProvider>
+          </ThemeProvider>
+        </PriceProvider>
       </body>
     </html>
   );

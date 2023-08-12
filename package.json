@@ -23,6 +23,7 @@
     "framer-motion": "^10.12.12",
     "html-to-image": "^1.11.11",
     "jspdf": "^2.5.1",
+    "lodash": "^4.17.21",
     "next": "canary",
     "postcss": "8.4.23",
     "react": "18.2.0",

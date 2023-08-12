@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext, useMemo } from "react";
 import { uid } from "uid";
 import InvoiceItem from "./InvoiceItem";
 import InvoiceModal from "./InvoiceModal";
@@ -13,6 +13,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db, storage } from "@/firebase_config";
+import { PriceContext } from "@/context/PriceContext";
 
 const date = new Date();
 const today = date.toLocaleDateString("en-GB", {
@@ -22,6 +23,7 @@ const today = date.toLocaleDateString("en-GB", {
 });
 
 const InvoiceForm = ({ toTab }: any) => {
+  const { lists } = useContext(PriceContext);
   const [isOpen, setIsOpen] = useState(false);
   const [invoiceNumber, setInvoiceNumber] = useState(1);
   const [telahTerimaDari, setTelahTerimaDari] = useState("");
@@ -43,6 +45,8 @@ const InvoiceForm = ({ toTab }: any) => {
       keterangan: "",
     },
   ]);
+
+  // console.log(lists);
 
   const createInvoiceHandler = async (event: any) => {
     event.preventDefault();
@@ -160,28 +164,41 @@ const InvoiceForm = ({ toTab }: any) => {
   };
 
   const calculatePrice = (bebanMuatan: number, distance: number) => {
-    let rate = 0;
-    if (distance >= 1 && distance <= 10) {
-      rate = 91;
-    } else if (distance > 10 && distance <= 20) {
-      rate = 118;
-    } else if (distance > 20 && distance <= 30) {
-      rate = 148;
-    } else if (distance > 30 && distance <= 40) {
-      rate = 167;
-    } else if (distance > 40 && distance <= 100) {
-      rate = 260;
-    } else if (distance > 100 && distance <= 200) {
-      rate = 320;
-    } else if (distance > 200 && distance <= 300) {
-      rate = 400;
-    } else if (distance > 300 && distance <= 400) {
-      rate = 550;
-    } else if (distance > 400 && distance <= 500) {
-      rate = 675;
-    }
+    let price = 0;
+    lists.map((rate) => {
+      for (const key in rate) {
+        if (
+          rate.id == rate[key] &&
+          rate["distance_to"] > distance &&
+          distance > rate["distance_from"]
+        ) {
+          price = bebanMuatan * rate["rate"];
+        }
+      }
+    });
+    return price;
+    // let rate = 0;
+    // if (distance >= 1 && distance <= 10) {
+    //   rate = 91;
+    // } else if (distance > 10 && distance <= 20) {
+    //   rate = 118;
+    // } else if (distance > 20 && distance <= 30) {
+    //   rate = 148;
+    // } else if (distance > 30 && distance <= 40) {
+    //   rate = 167;
+    // } else if (distance > 40 && distance <= 100) {
+    //   rate = 260;
+    // } else if (distance > 100 && distance <= 200) {
+    //   rate = 320;
+    // } else if (distance > 200 && distance <= 300) {
+    //   rate = 400;
+    // } else if (distance > 300 && distance <= 400) {
+    //   rate = 550;
+    // } else if (distance > 400 && distance <= 500) {
+    //   rate = 675;
+    // }
 
-    return rate * bebanMuatan;
+    // return rate * bebanMuatan;
   };
 
   const total = items.reduce((total, num) => {
