@@ -68,7 +68,7 @@ export default function OrdersItem() {
     setLoading(true);
     setTimeout(async () => {
       await deleteDoc(doc(db, "orders", item.id));
-      await deleteDoc(doc(db, "invoices", item.uidInv));
+      // await deleteDoc(doc(db, "invoices", item.uidInv));
       setLoading(false);
     }, 2000);
   };
@@ -127,7 +127,7 @@ export default function OrdersItem() {
                 <td>{item.invoiceDate}</td>
                 <td>{item.invoiceNumber}</td>
                 <td>{item.kota}</td>
-                <td>{item.totalBerat}</td>
+                <td>{item.totalBerat} Kg</td>
                 <td>
                   <div>
                     Rp.{" "}
@@ -213,7 +213,6 @@ export default function OrdersItem() {
         setIsOpen={setIsOpen}
         invoiceInfo={{
           invoiceNumber: lists.invoiceNumber,
-          total: lists.totalPrice,
           telahTerimaDari: lists.telah_terima_dari,
           uangSejumlah: lists.telah_dibayar,
         }}

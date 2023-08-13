@@ -11,6 +11,7 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import { db, storage } from "@/firebase_config";
 import { PriceContext } from "@/context/PriceContext";
@@ -28,6 +29,8 @@ const InvoiceForm = ({ toTab }: any) => {
   const [invoiceNumber, setInvoiceNumber] = useState(1);
   const [telahTerimaDari, setTelahTerimaDari] = useState("");
   const [order, setOrder] = useState("");
+  const [resHarga, setResHarga] = useState(0);
+  const [resBerat, setResBerat] = useState(0);
   const [uangSejumlah, setUangSejumlah] = useState("");
   const [lastItem, setLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,10 +55,28 @@ const InvoiceForm = ({ toTab }: any) => {
     event.preventDefault();
     setLoading(true);
     setTimeout(async () => {
-      // event.preventDefault();
       if (items.length < 2 || lastItem) {
-        const inv = await addDoc(collection(db, "invoices"), {
-          // idOrder: dataOrder.id,
+        let dataOrder = {};
+        if (!order && !lastItem) {
+          dataOrder = await addDoc(collection(db, "orders"), {
+            telah_terima_dari: telahTerimaDari,
+            invoiceDate: today,
+            totalPrice: total,
+            telah_dibayar: uangSejumlah,
+            invoiceNumber: invoiceNumber,
+            jenis_truk: items[items.length - 1].jenisTruk,
+            kota: items[items.length - 1].kota,
+            totalBerat: totalBerat,
+            status: "PENDING",
+            platKendaraan: "",
+            supir: "",
+          });
+          setResHarga(resHarga + items[items.length - 1].harga);
+          setResBerat(+resBerat + Number(items[items.length - 1].kg));
+        }
+
+        await addDoc(collection(db, "invoices"), {
+          idOrder: order ?? dataOrder.id,
           invoiceNumber: invoiceNumber,
           uraian: items[items.length - 1].uraian,
           jenisTruk: items[items.length - 1].jenisTruk,
@@ -66,21 +87,16 @@ const InvoiceForm = ({ toTab }: any) => {
           harga: items[items.length - 1].harga,
           keterangan: items[items.length - 1].keterangan,
         });
-        await addDoc(collection(db, "orders"), {
-          telah_terima_dari: telahTerimaDari,
-          uidInv: order ? order : inv.id,
-          invoiceDate: today,
-          totalPrice: total,
-          telah_dibayar: uangSejumlah,
-          invoiceNumber: invoiceNumber,
-          jenis_truk: items[items.length - 1].jenisTruk,
-          kota: items[items.length - 1].kota,
-          totalBerat: totalBerat,
-          status: "PENDING",
-          platKendaraan: "",
-          supir: "",
-        });
-        // setOrder(dataOrder.id);
+
+        setResHarga(resHarga + items[items.length - 1].harga);
+        setResBerat(+resBerat + Number(items[items.length - 1].kg));
+
+        if (order) {
+          await updateDoc(doc(db, "orders", order), {
+            totalPrice: resHarga + items[items.length - 1].harga,
+            totalBerat: +resBerat + Number(items[items.length - 1].kg),
+          });
+        }
       } else {
         toTab(1);
       }
@@ -107,11 +123,34 @@ const InvoiceForm = ({ toTab }: any) => {
     ]);
   };
 
-  const addItemHandler = async () => {
+  const addItemHandler = async (e) => {
+    e.preventDefault();
     // const id = uid(6);
     setLastItem(true);
-    const inv = await addDoc(collection(db, "invoices"), {
+    let dataOrder = {};
+    // let totHarga = 0
+    // console.log(typeof order);
+    if (!order) {
+      dataOrder = await addDoc(collection(db, "orders"), {
+        telah_terima_dari: telahTerimaDari,
+        // uidInv: order ? order : inv.id,
+        invoiceDate: today,
+        totalPrice: total,
+        telah_dibayar: uangSejumlah,
+        invoiceNumber: invoiceNumber,
+        jenis_truk: items[items.length - 1].jenisTruk,
+        kota: items[items.length - 1].kota,
+        totalBerat: totalBerat,
+        status: "PENDING",
+        platKendaraan: "",
+        supir: "",
+      });
+      setOrder(dataOrder.id);
+    }
+
+    await addDoc(collection(db, "invoices"), {
       invoiceNumber: invoiceNumber,
+      idOrder: !order ? dataOrder.id : order,
       uraian: items[items.length - 1].uraian,
       jenisTruk: items[items.length - 1].jenisTruk,
       kota: items[items.length - 1].kota,
@@ -121,7 +160,10 @@ const InvoiceForm = ({ toTab }: any) => {
       harga: items[items.length - 1].harga,
       keterangan: items[items.length - 1].keterangan,
     });
-    setOrder(inv.id);
+
+    setResHarga(resHarga + items[items.length - 1].harga);
+    setResBerat(+resBerat + Number(items[items.length - 1].kg));
+
     setItems((prevItem) => [
       ...prevItem,
       {

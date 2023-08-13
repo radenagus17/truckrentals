@@ -99,6 +99,9 @@ export default function PrintInvoice({
     });
   }, [invoiceInfo?.invoiceNumber]);
 
+  const totalHarga = invoice.reduce((total: number, item: any) => {
+    return total + Number(item.harga);
+  }, 0);
   const totalBerat = invoice.reduce((total: number, item: any) => {
     return total + Number(item.kg);
   }, 0);
@@ -227,7 +230,7 @@ export default function PrintInvoice({
                           <td>{Number(totalBerat)}</td>
                           <td>
                             Rp{" "}
-                            {Number(invoiceInfo.total)
+                            {Number(totalHarga)
                               .toLocaleString()
                               .replaceAll(",", ".")}
                           </td>
