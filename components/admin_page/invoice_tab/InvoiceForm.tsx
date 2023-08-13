@@ -210,8 +210,8 @@ const InvoiceForm = ({ toTab }: any) => {
       for (const key in rate) {
         if (
           rate.id == rate[key] &&
-          rate["distance_to"] > distance &&
-          distance > rate["distance_from"]
+          rate["distance_to"] >= distance &&
+          distance >= rate["distance_from"]
         ) {
           price = Number(bebanMuatan) * Number(rate["rate"]);
         }
