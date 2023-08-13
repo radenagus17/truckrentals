@@ -26,6 +26,7 @@ import PrintInvoice from "./invoicePrint";
 
 export default function OrdersItem() {
   const [data, setData] = useState<any>([]);
+  const [invoices, setInvoices] = useState<any>([]);
   const [lists, setLists] = useState<any>({});
   const [invoice, setInvoice] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -39,8 +40,17 @@ export default function OrdersItem() {
     });
   };
 
+  const getInvoices = () => {
+    onSnapshot(collection(db, "invoices"), (snapshot) => {
+      let items: any = [];
+      snapshot.docs.map((x: any) => items.push({ ...x.data(), id: x.id }));
+      setInvoices(items);
+    });
+  };
+
   useEffect(() => {
     getData();
+    getInvoices();
   }, []);
 
   const openModalPrint = (event: any, item: any) => {
@@ -68,7 +78,11 @@ export default function OrdersItem() {
     setLoading(true);
     setTimeout(async () => {
       await deleteDoc(doc(db, "orders", item.id));
-      // await deleteDoc(doc(db, "invoices", item.uidInv));
+      invoices
+        .filter((items) => items.idOrder === item.id)
+        .forEach(async (el) => {
+          await deleteDoc(doc(db, "invoices", el.id));
+        });
       setLoading(false);
     }, 2000);
   };

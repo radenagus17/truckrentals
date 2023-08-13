@@ -191,12 +191,11 @@ const InvoiceForm = ({ toTab }: any) => {
       name: event.target.name,
       value: event.target.value,
     };
-
     const newItems = items.map((items: any) => {
       for (const key in items) {
         if (key === editedItem.name && items.id === editedItem.id) {
           items[key] = editedItem.value;
-          items["harga"] = calculatePrice(items["kg"], items["jarakKota"]);
+          items["harga"] = calculatePrice(+items["kg"], +items["jarakKota"]);
         }
       }
       return items;
@@ -214,7 +213,7 @@ const InvoiceForm = ({ toTab }: any) => {
           rate["distance_to"] > distance &&
           distance > rate["distance_from"]
         ) {
-          price = bebanMuatan * rate["rate"];
+          price = Number(bebanMuatan) * Number(rate["rate"]);
         }
       }
     });
