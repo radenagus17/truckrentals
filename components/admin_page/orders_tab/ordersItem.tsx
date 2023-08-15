@@ -136,7 +136,7 @@ export default function OrdersItem() {
         <tbody>
           {data.map((item, index) => (
             <>
-              <tr key={index}>
+              <tr key={item.id}>
                 <td>{index + 1}</td>
                 <td>{item.invoiceDate}</td>
                 <td>{item.invoiceNumber}</td>

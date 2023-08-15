@@ -100,7 +100,7 @@ function AddService() {
   return (
     <div className="flex flex-col space-y-5">
       <label htmlFor="file">
-        <div className="p-5 border-2 border-dashed border-primary flex justify-center items-center h-[20rem] flex flex-col space-y-3">
+        <div className="p-5 border-2 border-dashed border-primary flex justify-center items-center h-[20rem] flex-col space-y-3">
           {file !== null ? (
             <img src={URL.createObjectURL(file)} alt="" />
           ) : (

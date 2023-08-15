@@ -279,7 +279,7 @@ const InvoiceForm = ({ toTab }: any) => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <div className="text-sm font-bold sm:text-base w-[150px]">
+            <div className="text-sm font-bold sm:text-base w-[155px]">
               Telah Terima Dari :
             </div>
             <TextField
