@@ -159,7 +159,7 @@ function Calculator() {
           <ReactGoogleAutocomplete
             className="border p-5 w-full"
             placeholder="Masukkan Titik Awal Lokasi"
-            apiKey={process.env.NEXT_PUBLIC_API_KEY}
+            apiKey={process.env.AUTOCOMPLETE_API_KEY}
             onPlaceSelected={titikAwalHandler}
           />
         </div>
@@ -167,7 +167,7 @@ function Calculator() {
           <ReactGoogleAutocomplete
             className="border p-5 w-full"
             placeholder="Masukkan Titik Awal Lokasi"
-            apiKey={process.env.NEXT_PUBLIC_API_KEY}
+            apiKey={process.env.AUTOCOMPLETE_API_KEY}
             onPlaceSelected={titikAkhirHandler}
           />
         </div>
