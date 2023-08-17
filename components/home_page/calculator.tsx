@@ -1,11 +1,12 @@
 "use client";
 
 import { Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import TruckIcon from "@mui/icons-material/LocalShipping";
 import MoneyIcon from "@mui/icons-material/PaidOutlined";
 import ReactGoogleAutocomplete from "react-google-autocomplete";
 import { toast } from "react-toastify";
+import { PriceContext } from "@/context/PriceContext";
 
 interface data {
   jenisTruk: string;
@@ -14,6 +15,7 @@ interface data {
 }
 
 function Calculator() {
+  const { lists } = useContext(PriceContext);
   const [inputData, setInputData] = useState<data>({
     jenisTruk: "",
     bebanMuatan: 0,
@@ -25,29 +27,43 @@ function Calculator() {
   const [titikAkhir, setTitikAkhir] = useState<any>({});
 
   const calculatePrice = (bebanMuatan: number, distance: number) => {
-    let rate = 0;
-    if (distance >= 1 && distance <= 10) {
-      rate = 91;
-    } else if (distance > 10 && distance <= 20) {
-      rate = 118;
-    } else if (distance > 20 && distance <= 30) {
-      rate = 148;
-    } else if (distance > 30 && distance <= 40) {
-      rate = 167;
-    } else if (distance > 40 && distance <= 100) {
-      rate = 260;
-    } else if (distance > 100 && distance <= 200) {
-      rate = 320;
-    } else if (distance > 200 && distance <= 300) {
-      rate = 400;
-    } else if (distance > 300 && distance <= 400) {
-      rate = 550;
-    } else if (distance > 400 && distance <= 500) {
-      rate = 675;
-    }
+    // let rate = 0;
+    // if (distance >= 1 && distance <= 10) {
+    //   rate = 91;
+    // } else if (distance > 10 && distance <= 20) {
+    //   rate = 118;
+    // } else if (distance > 20 && distance <= 30) {
+    //   rate = 148;
+    // } else if (distance > 30 && distance <= 40) {
+    //   rate = 167;
+    // } else if (distance > 40 && distance <= 100) {
+    //   rate = 260;
+    // } else if (distance > 100 && distance <= 200) {
+    //   rate = 320;
+    // } else if (distance > 200 && distance <= 300) {
+    //   rate = 400;
+    // } else if (distance > 300 && distance <= 400) {
+    //   rate = 550;
+    // } else if (distance > 400 && distance <= 500) {
+    //   rate = 675;
+    // }
+
+    let price = 0;
+    lists.map((rate) => {
+      for (const key in rate) {
+        if (
+          rate.id == rate[key] &&
+          rate["distance_to"] >= distance &&
+          distance >= rate["distance_from"]
+        ) {
+          price = Number(bebanMuatan) * Number(rate["rate"]);
+        }
+      }
+    });
+    // return price;
 
     if (bebanMuatan >= 0) {
-      let price = Number(bebanMuatan) * rate;
+      // price = Number(bebanMuatan) * rate;
       setHarga(price);
     } else {
       console.log("wrong");
@@ -161,14 +177,22 @@ function Calculator() {
             placeholder="Masukkan Titik Awal Lokasi"
             apiKey={process.env.AUTOCOMPLETE_API_KEY}
             onPlaceSelected={titikAwalHandler}
+            options={{
+              types: ["(regions)"],
+              componentRestrictions: { country: "id" },
+            }}
           />
         </div>
         <div className="w-full">
           <ReactGoogleAutocomplete
             className="border p-5 w-full"
-            placeholder="Masukkan Titik Awal Lokasi"
+            placeholder="Masukkan Titik Akhir Lokasi"
             apiKey={process.env.AUTOCOMPLETE_API_KEY}
             onPlaceSelected={titikAkhirHandler}
+            options={{
+              types: ["(regions)"],
+              componentRestrictions: { country: "id" },
+            }}
           />
         </div>
         <Button type="submit" variant="contained" className="bg-primary">
