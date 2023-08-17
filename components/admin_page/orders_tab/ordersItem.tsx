@@ -23,6 +23,7 @@ import {
 import { db, storage } from "@/firebase_config";
 import InvoiceField from "../invoice_tab/InvoiceField";
 import PrintInvoice from "./invoicePrint";
+import Swal from "sweetalert2";
 
 export default function OrdersItem() {
   const [data, setData] = useState<any>([]);
@@ -75,16 +76,31 @@ export default function OrdersItem() {
 
   // delete order in firebase
   const deleteItem = (item) => {
-    setLoading(true);
-    setTimeout(async () => {
-      await deleteDoc(doc(db, "orders", item.id));
-      invoices
-        .filter((items) => items.idOrder === item.id)
-        .forEach(async (el) => {
-          await deleteDoc(doc(db, "invoices", el.id));
-        });
-      setLoading(false);
-    }, 2000);
+    Swal.fire({
+      title: "Apakah kamu yakin ingin menghapus order ini?",
+      showCancelButton: true,
+      cancelButtonText: "Batal",
+      confirmButtonText: "Yaa",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        setLoading(true);
+        setTimeout(async () => {
+          await deleteDoc(doc(db, "orders", item.id));
+          invoices
+            .filter((items) => items.idOrder === item.id)
+            .forEach(async (el) => {
+              await deleteDoc(doc(db, "invoices", el.id));
+            });
+          setLoading(false);
+          Swal.fire("Terhapus!", "", "success");
+        }, 2000);
+      } else if (result.isDismissed) {
+        Swal.fire("Dibatalkan", "", "info");
+      }
+    });
   };
 
   const edtiItemHandler = (event: any) => {
