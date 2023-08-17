@@ -196,8 +196,11 @@ export default function PrintInvoice({
                           <th>No</th>
                           <th>Uraian</th>
                           <th>Jenis Truk</th>
-                          <th>Kota</th>
-                          <th>Jarak ( Dalam KM )</th>
+                          <th>Lokasi Awal</th>
+                          <th>Lokasi Akhir</th>
+                          <th>Rate</th>
+                          {/* <th>Kota</th>
+                          <th>Jarak ( Dalam KM )</th> */}
                           <th>QTY Bags</th>
                           <th>Kg</th>
                           <th>Harga</th>
@@ -210,8 +213,11 @@ export default function PrintInvoice({
                             <td>{index + 1}</td>
                             <td>{item.uraian}</td>
                             <td>{item.jenisTruk}</td>
-                            <td>{item.kota}</td>
-                            <td>{item.jarakKota}</td>
+                            <td>{item.lokasi_awal.split(",")[0]}</td>
+                            <td>{item.lokasi_akhir.split(",")[0]}</td>
+                            <td>{item.rate}</td>
+                            {/* <td>{item.kota}</td>
+                            <td>{item.jarakKota}</td> */}
                             <td>{Number(item.qtyBags)}</td>
                             <td>{Number(item.kg)}</td>
                             <td>
@@ -224,8 +230,9 @@ export default function PrintInvoice({
                           </tr>
                         ))}
                         <tr>
-                          <td></td>
-                          <td colSpan={4}>Jumlah</td>
+                          {/* <td></td>
+                          <td></td> */}
+                          <td colSpan={6}>Jumlah</td>
                           <td>{Number(totalQtyBags)}</td>
                           <td>{Number(totalBerat)}</td>
                           <td>

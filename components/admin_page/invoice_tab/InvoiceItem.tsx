@@ -3,13 +3,18 @@
 import { Button, IconButton } from "@mui/material";
 import InvoiceField from "./InvoiceField";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ReactGoogleAutocomplete from "react-google-autocomplete";
 
 const InvoiceItem = ({
   id,
   uraian,
   jenisTruk,
-  kota,
-  jarakKota,
+  // kota,
+  lokasi_awal,
+  lokasi_akhir,
+  titikAwal,
+  titikAkhir,
+  // jarakKota,
   qtyBags,
   kg,
   harga,
@@ -47,7 +52,7 @@ const InvoiceItem = ({
           }}
         />
       </td>
-      <td>
+      {/* <td>
         <InvoiceField
           onEditItem={(event: any) => onEditItem(event)}
           cellData={{
@@ -57,8 +62,50 @@ const InvoiceItem = ({
             value: kota,
           }}
         />
+      </td> */}
+      <td>
+        <ReactGoogleAutocomplete
+          className="outline-none p-2 w-[12rem]"
+          placeholder="Masukkan Titik Awal Lokasi"
+          apiKey={process.env.AUTOCOMPLETE_API_KEY}
+          onPlaceSelected={titikAwal}
+          options={{
+            types: ["(regions)"],
+            componentRestrictions: { country: "id" },
+          }}
+        />
+        {/* <InvoiceField
+          onEditItem={(event: any) => onEditItem(event)}
+          cellData={{
+            type: "text",
+            name: "lokasi_awal",
+            id: id,
+            value: lokasi_awal,
+          }}
+        /> */}
       </td>
       <td>
+        <ReactGoogleAutocomplete
+          className="outline-none p-2 w-[12rem]"
+          placeholder="Masukkan Titik Akhir Lokasi"
+          apiKey={process.env.AUTOCOMPLETE_API_KEY}
+          onPlaceSelected={titikAkhir}
+          options={{
+            types: ["(regions)"],
+            componentRestrictions: { country: "id" },
+          }}
+        />
+        {/* <InvoiceField
+          onEditItem={(event: any) => onEditItem(event)}
+          cellData={{
+            type: "text",
+            name: "lokasi_akhir",
+            id: id,
+            value: lokasi_akhir,
+          }}
+        /> */}
+      </td>
+      {/* <td>
         <InvoiceField
           onEditItem={(event: any) => onEditItem(event)}
           cellData={{
@@ -68,7 +115,7 @@ const InvoiceItem = ({
             value: jarakKota,
           }}
         />
-      </td>
+      </td> */}
       <td>
         <InvoiceField
           onEditItem={(event: any) => onEditItem(event)}

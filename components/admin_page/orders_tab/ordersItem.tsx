@@ -117,7 +117,9 @@ export default function OrdersItem() {
             <th>No</th>
             <th>Tanggal Invoice</th>
             <th>Invoice Number</th>
-            <th>Kota</th>
+            {/* <th>Lokasi Awal</th>
+            <th>Lokasi Akhir</th>
+            <th>Rate</th> */}
             <th>Total Berat</th>
             <th>Total Harga</th>
             <th>Terima Dari</th>
@@ -140,7 +142,9 @@ export default function OrdersItem() {
                 <td>{index + 1}</td>
                 <td>{item.invoiceDate}</td>
                 <td>{item.invoiceNumber}</td>
-                <td>{item.kota}</td>
+                {/* <td>{item.lokasi_awal.slice(0, 22).concat("...")}</td>
+                <td>{item.lokasi_akhir.slice(0, 22).concat("...")}</td>
+                <td>{item.rate}</td> */}
                 <td>{item.totalBerat} Kg</td>
                 <td>
                   <div>
