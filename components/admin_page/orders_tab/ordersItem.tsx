@@ -77,12 +77,13 @@ export default function OrdersItem() {
   // delete order in firebase
   const deleteItem = (item) => {
     Swal.fire({
-      title: "Apakah kamu yakin ingin menghapus order ini?",
+      title: "Apakah kamu yakin!",
+      text: "Ingin menghapus order ini?",
       showCancelButton: true,
       cancelButtonText: "Batal",
       confirmButtonText: "Yaa",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
@@ -98,7 +99,7 @@ export default function OrdersItem() {
           Swal.fire("Terhapus!", "", "success");
         }, 2000);
       } else if (result.isDismissed) {
-        Swal.fire("Dibatalkan", "", "info");
+        Swal.fire("Terima kasih!", "", "info");
       }
     });
   };

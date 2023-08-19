@@ -66,7 +66,7 @@ const InvoiceItem = ({
       <td>
         <ReactGoogleAutocomplete
           className="outline-none p-2 w-[12rem]"
-          placeholder="Masukkan Titik Awal Lokasi"
+          placeholder="Lokasi..."
           apiKey={process.env.AUTOCOMPLETE_API_KEY}
           onPlaceSelected={titikAwal}
           options={{
@@ -87,7 +87,7 @@ const InvoiceItem = ({
       <td>
         <ReactGoogleAutocomplete
           className="outline-none p-2 w-[12rem]"
-          placeholder="Masukkan Titik Akhir Lokasi"
+          placeholder="Lokasi..."
           apiKey={process.env.AUTOCOMPLETE_API_KEY}
           onPlaceSelected={titikAkhir}
           options={{
