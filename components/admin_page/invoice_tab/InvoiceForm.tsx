@@ -23,6 +23,10 @@ const today = date.toLocaleDateString("en-GB", {
   year: "numeric",
 });
 
+interface Order {
+  id: string;
+}
+
 const InvoiceForm = ({ toTab }: any) => {
   const { lists } = useContext(PriceContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +68,10 @@ const InvoiceForm = ({ toTab }: any) => {
     setLoading(true);
     setTimeout(async () => {
       if (items.length < 2 || lastItem) {
-        let dataOrder = {};
+        let dataOrder: Order = {
+          id: "",
+        };
+        // let dataOrder = {};
         if (!order && !lastItem) {
           dataOrder = await addDoc(collection(db, "orders"), {
             telah_terima_dari: telahTerimaDari,
@@ -141,7 +148,9 @@ const InvoiceForm = ({ toTab }: any) => {
     e.preventDefault();
     // const id = uid(6);
     setLastItem(true);
-    let dataOrder = {};
+    let dataOrder: Order = {
+      id: "",
+    };
     // let totHarga = 0
     // console.log(typeof order);
     if (!order) {
