@@ -12,9 +12,6 @@ RUN rm -rf node_modules
 
 RUN npm install && npm run build
 
-ENV NODE_ENV="production"
-ENV PATH /usr/app/node_modules/.bin:$PATH
-
 EXPOSE 3000
 
 CMD [ "npm", "start" ]
