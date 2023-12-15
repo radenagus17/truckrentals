@@ -1,6 +1,5 @@
 .next
 node_modules
 .git*
-.env.prod
 package-lock.json
 README.md
